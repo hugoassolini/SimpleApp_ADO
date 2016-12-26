@@ -8,16 +8,16 @@ namespace SimpleApp.Infra.Data.Repository
 {
 	public class CategorieRepository : ICategorieRepository
 	{
-		private BaseContext dbContext;
+		private BaseContext _dbContext;
 
 		public CategorieRepository(BaseContext context)
 		{
-			this.dbContext = context;
+			this._dbContext = context;
 		}
 
 		public Categorie FindById(int id)
 		{
-			using (var command = dbContext._connection.CreateCommand())
+			using (var command = _dbContext.CreateCommand())
 			{
 				command.CommandText = "select * from Categories where CategoryID = @id";
 
@@ -27,7 +27,7 @@ namespace SimpleApp.Infra.Data.Repository
 
 				command.Parameters.Add(paramId);
 
-				dbContext._connection.Open();
+				_dbContext.Open();
 				var dr = command.ExecuteReader();
 
 				Categorie categorie = null;
@@ -45,7 +45,7 @@ namespace SimpleApp.Infra.Data.Repository
 
 		public Categorie FindByName(string name)
 		{
-			using (var command = dbContext._connection.CreateCommand())
+			using (var command = _dbContext.CreateCommand())
 			{
 				command.CommandText = "select * from Categories where CategoryName = @name";
 
@@ -55,7 +55,7 @@ namespace SimpleApp.Infra.Data.Repository
 
 				command.Parameters.Add(paramId);
 
-				dbContext._connection.Open();
+				_dbContext.Open();
 				var dr = command.ExecuteReader();
 
 				Categorie categorie = null;
@@ -73,11 +73,11 @@ namespace SimpleApp.Infra.Data.Repository
 
 		public List<Categorie> GetAll()
 		{
-			using (var command = dbContext._connection.CreateCommand())
+			using (var command = _dbContext.CreateCommand())
 			{
 				command.CommandText = "select * from Categories";
 
-				dbContext._connection.Open();
+				_dbContext.Open();
 				var dr = command.ExecuteReader();
 
 				List<Categorie> listCategorie = new List<Categorie>();
@@ -99,7 +99,7 @@ namespace SimpleApp.Infra.Data.Repository
 
 		public void Add(Categorie categorie)
 		{
-			using (var command = dbContext._connection.CreateCommand())
+			using (var command = _dbContext.CreateCommand())
 			{
 				command.CommandText = "insert into Categories (CategoryName, Description) values (@name, @description)";
 
@@ -114,14 +114,14 @@ namespace SimpleApp.Infra.Data.Repository
 				command.Parameters.Add(paramName);
 				command.Parameters.Add(paramDescription);
 
-				dbContext._connection.Open();
+				_dbContext.Open();
 				command.ExecuteNonQuery();
 			}
 		}
 
 		public void Delete(int id)
 		{
-			using (var command = dbContext._connection.CreateCommand())
+			using (var command = _dbContext.CreateCommand())
 			{
 				command.CommandText = "delete from Categories where CategoryID = @id";
 
@@ -131,14 +131,14 @@ namespace SimpleApp.Infra.Data.Repository
 
 				command.Parameters.Add(paramId);
 
-				dbContext._connection.Open();
+				_dbContext.Open();
 				command.ExecuteNonQuery();
 			}
 		}
 
 		public void Update(Categorie categorie)
 		{
-			using (var command = dbContext._connection.CreateCommand())
+			using (var command = _dbContext.CreateCommand())
 			{
 				command.CommandText = "update Categories set CategoryName = @name, Description = @description where CategoryID = @id";
 
@@ -158,14 +158,14 @@ namespace SimpleApp.Infra.Data.Repository
 				command.Parameters.Add(paramName);
 				command.Parameters.Add(paramDescription);
 
-				dbContext._connection.Open();
+				_dbContext.Open();
 				command.ExecuteNonQuery();
 			}
 		}
 
 		public void Dispose()
 		{
-			dbContext.Dispose();
+			_dbContext.Dispose();
 			GC.SuppressFinalize(this);
 		}
 	}
